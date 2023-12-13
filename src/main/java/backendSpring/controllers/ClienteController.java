@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:8080"})
 
 public class ClienteController {
     @Autowired
