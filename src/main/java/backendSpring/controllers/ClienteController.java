@@ -41,5 +41,20 @@ public class ClienteController {
         return clienteServices.delete(id);
     }
 
+    @PutMapping(value = "/clientes/{id}")
+    public Cliente upDate(@PathVariable(value = "id") Long id, @RequestBody Cliente cliente){
+        Cliente clienteActualizado = clienteServices.findById(id);
+
+        if (clienteActualizado != null){
+            clienteActualizado.setNombre(cliente.getNombre());
+            clienteActualizado.setApellido(cliente.getApellido());
+            clienteActualizado.setEmail(cliente.getEmail());
+            clienteActualizado.setTelefono(cliente.getTelefono());
+            clienteActualizado.setFecha(cliente.getFecha());
+            System.out.println("Cliente actualizado: "+cliente.getNombre());
+        }
+        return clienteServices.save(clienteActualizado);
+    }
+
 
 }
