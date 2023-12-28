@@ -15,12 +15,12 @@ public class Cliente {
     @Column(name = "id")
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String nombre;
     private String apellido;
     private String telefono;
 
-
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(name = "fecha")
