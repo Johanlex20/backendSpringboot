@@ -1,15 +1,18 @@
 package backendSpring.controllers;
 import backendSpring.models.Cliente;
 import backendSpring.services.ClienteServices;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -64,9 +67,18 @@ public class ClienteController {
     */
 
     @PostMapping(value = "/clientes")
-    public ResponseEntity<?> save(@RequestBody  Cliente cliente){
+    public ResponseEntity<?> save(@Valid @RequestBody  Cliente cliente, BindingResult result){
         Cliente newCliente = null;
         Map<String,Object> response = new HashMap<>();
+
+        if (result.hasErrors()){
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err ->"El campo '"+ err.getField() +"' "+ err.getDefaultMessage())
+                    .collect(Collectors.toList());
+            response.put("errors",errors);
+            return new ResponseEntity<Map<String,Object>>(response,HttpStatus.BAD_REQUEST);
+        }
 
         try{
             newCliente = clienteServices.save(cliente);
@@ -126,9 +138,18 @@ public class ClienteController {
     */
 
     @PutMapping(value = "/clientes/{id}")
-    public ResponseEntity<?> upDate(@PathVariable(value = "id") Long id, @RequestBody Cliente cliente){
+    public ResponseEntity<?> upDate(@Valid @RequestBody Cliente cliente, BindingResult result, @PathVariable(value = "id") Long id){
         Cliente clienteActualizado = clienteServices.findById(id);
         Map<String,Object> response = new HashMap<>();
+
+        if (result.hasErrors()){
+            List<String> errors = result.getFieldErrors()
+                    .stream()
+                    .map(err -> "El campo '"+ err.getField()+" '"+err.getDefaultMessage())
+                    .collect(Collectors.toList());
+            response.put("errors", errors);
+            return new ResponseEntity<Map<String,Object>>(response,HttpStatus.BAD_REQUEST);
+        }
 
         try{
             if (clienteActualizado != null){
