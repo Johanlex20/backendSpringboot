@@ -18,25 +18,27 @@ public class Cliente {
     @Column(name = "id")
     private Long id;
 
-    @NotEmpty
-    @Size(min = 4, max = 15)
+
+    @NotEmpty(message = "no puede estar vacio")
+    @Size(min = 4, max = 12, message = "el tamaño tiene que estar entre 4 y 12 caracteres")
     @Column(nullable = false)
     private String nombre;
 
-    @NotEmpty
-    @Size(min = 4, max = 15)
+    @NotEmpty(message = "no puede estar vacio")
     @Column(nullable = false)
+    @Size(min = 4, max = 12, message = "el tamaño tiene que estar entre 4 y 12 caracteres")
     private String apellido;
 
-    @NotEmpty
-    @Size(min = 10,max = 13)
+    @NotEmpty(message = "no puede estar vacio")
+    @Size(min = 10, max = 13, message = "el tamaño debe tener 10 numeros")
     @Column(nullable = false)
     private String telefono;
 
-    @NotEmpty
-    @Column(nullable = false, unique = true)
-    @Email
+    @NotEmpty(message = "no puede estar vacio")
+    @Email(message = "no es una direccion de correo con un formato valido")
+    @Column(nullable = false , unique = true)
     private String email;
+
 
     @Temporal(TemporalType.DATE)
     @Column(nullable = false)
