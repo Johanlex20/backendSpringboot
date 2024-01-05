@@ -4,6 +4,9 @@ import backendSpring.services.ClienteServices;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -27,6 +30,13 @@ public class ClienteController {
     public List<Cliente> findAll(){
         System.out.println("Resultados encontardos: ");
         return clienteServices.findAll();
+    }
+
+    @GetMapping(value = "/clientes/page/{page}")
+    public Page<Cliente> findAll(@PathVariable Integer page){
+        System.out.println("Resultados encontardos: ");
+        Pageable pageable = PageRequest.of(page,4);
+        return clienteServices.findAll(pageable);
     }
 
     //----------------------------------------------------------------METODO findId ----------------------------------------------------------------------------//
