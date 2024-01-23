@@ -20,6 +20,7 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 
@@ -197,7 +198,7 @@ public class ClienteController {
         Cliente cliente = clienteServices.findById(id);
 
         if (!archivo.isEmpty()){
-            String nombreArchivo = archivo.getOriginalFilename();
+            String nombreArchivo = UUID.randomUUID().toString() +"_"+ archivo.getOriginalFilename().replace(" ","");
             Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath(); //IMPORTAR PATH DE Java.nio.file
 
             try {
