@@ -44,4 +44,6 @@ public class Cliente {
     @Temporal(TemporalType.DATE)
     private Date fecha;
 
+    private String foto;
+
 }

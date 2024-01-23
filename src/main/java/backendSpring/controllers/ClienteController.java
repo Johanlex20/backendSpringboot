@@ -11,7 +11,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -186,4 +191,31 @@ public class ClienteController {
     }
 
     //------------------------------------------------------------------------------------------------------------------------------------------------------/
+    @PostMapping(value = "/clientes/upload")
+    public ResponseEntity<?> upload(@RequestParam(value = "archivo")MultipartFile archivo, @RequestParam(value = "id") Long id){
+        Map<String,Object> response = new HashMap<>();
+        Cliente cliente = clienteServices.findById(id);
+
+        if (!archivo.isEmpty()){
+            String nombreArchivo = archivo.getOriginalFilename();
+            Path rutaArchivo = Paths.get("uploads").resolve(nombreArchivo).toAbsolutePath(); //IMPORTAR PATH DE Java.nio.file
+
+            try {
+                Files.copy(archivo.getInputStream(), rutaArchivo);
+            }catch (IOException e){
+                response.put("mensaje","Error al subir la imagen del cliente "+nombreArchivo);
+                response.put("error",e.getMessage().concat(" : ".concat(e.getCause().getMessage())));
+                return new ResponseEntity<Map<String,Object>>(response,HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+            cliente.setFoto(nombreArchivo);
+            clienteServices.save(cliente);
+
+            response.put("cliente", cliente);
+            response.put("mensaje", "Has subido correctamente la imagen: "+nombreArchivo);
+        }
+
+        return new ResponseEntity<Map<String,Object>>(response, HttpStatus.CREATED);
+    }
+
 }
